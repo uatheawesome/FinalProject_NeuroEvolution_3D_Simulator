@@ -9,21 +9,35 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(SOURCES
     main.cpp
     NeuralNetwork.cpp
-    Node.cpp
-    Weight.cpp
-    HiddenLayer.cpp
+        Synapse.cpp
+        Synapse.h
+        Neuron.cpp
+        Neuron.h
+        Mutate.cpp
+        Mutate.h
 )
 
 # Header files
 set(HEADERS
     NeuralNetwork.h
-    Node.h
-    Weight.h
-    HiddenLayer.h
+        Genome.cpp
+        Genome.h
+        Synapse.cpp
+        Synapse.h
+        Neuron.cpp
+        Neuron.h
+        Mutate.cpp
+        Mutate.h
 )
 
 # Executable target
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS}
+        Synapse.cpp
+        Synapse.h
+        Neuron.cpp
+        Neuron.h
+        Mutate.cpp
+        Mutate.h)
 
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES
