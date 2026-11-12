@@ -9,6 +9,7 @@ class Neuron
 {
     int NeuronID;
     float Bias;
+    float ActivationValue;
 public:
     static int NeuronIDCounter;
     enum class NeuronTypes { INPUT, OUTPUT, HIDDEN};
@@ -18,7 +19,9 @@ public:
     [[nodiscard]] int GetNeuronID() const{return this->NeuronID;}
     [[nodiscard]] float GetBias() const{return this->Bias;}
     [[nodiscard]] NeuronTypes GetNeuronType() const { return this->ThisNeuronType; }
+    [[nodiscard]] float GetActivationValue() const{return this->ActivationValue;}
     void SetBias(float ThisBias){this->Bias = ThisBias;}
+    void SetActivationValue(float ThisActivationValue){this->ActivationValue = ThisActivationValue;}
 private:
     NeuronTypes ThisNeuronType;
 };

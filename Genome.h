@@ -15,7 +15,8 @@ class Genome {
     std::vector<Synapse> Synapses;
     float Fitness;
     public:
-    Genome(int InputCount);
+    static int OutNeuronCount;
+    Genome(int InputCount,int OutputCount);
     Genome();
 
     void Mutation_WeightTuning();//Change weights slightly
@@ -23,15 +24,15 @@ class Genome {
     void Mutation_SplittingTheWire(int InnovationID);//pics existing synapse Turns it to false, then adds hidden weight and adds synapses to bridge the gap
    [[nodiscard]] std::unique_ptr<Genome>  Mutation_Procreate(const Genome& Parent1, const Genome& Parent2);
 
-    //add forward pass func
-
     Neuron* FindNeuronByID(int id);
     Neuron* ReturnRandNeuron();
+
+    std::vector<float> ForwardPass(const std::vector<float>& inputs);
+    std::vector<Synapse> ReturnInSynapsesOfNeuron(int Neuron_ID)const;
 
     void AddNeuron(const Neuron& Neuron){this->Neurons.push_back(Neuron);}
     void AddSynapse(const Synapse &Synapse){this->Synapses.push_back(Synapse);}
     void SortSynapsesByInnovation();
-    void SortSynapsesByInnovation(const Genome& Parent);
     [[nodiscard]] std::vector<Synapse> GetSynapses()const{return this->Synapses;}
     [[nodiscard]] std::vector<Neuron> GetNeurons()const{return this->Neurons;}
     [[nodiscard]] float GetFitness()const{return this->Fitness;}

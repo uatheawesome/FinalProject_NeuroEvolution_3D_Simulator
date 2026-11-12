@@ -8,9 +8,10 @@
 #include <algorithm>
 #include <memory>
 
-
-Genome::Genome(int InputCount)//default build
+int Genome::OutNeuronCount = 0;
+Genome::Genome(int InputCount, int OutputCount)//default build
 {
+    OutNeuronCount = OutputCount;
     this->Neurons = std::vector<Neuron>();
     this->Synapses = std::vector<Synapse>();
     this->Fitness = 0;
@@ -19,12 +20,22 @@ Genome::Genome(int InputCount)//default build
         auto NewInputNeuron = Neuron(Neuron::NeuronTypes::INPUT);
         this->AddNeuron(NewInputNeuron);
     }
+    for (size_t i = 0; i < OutputCount; i++)
+    {
+        auto NewInputNeuron = Neuron(Neuron::NeuronTypes::OUTPUT);
+        this->AddNeuron(NewInputNeuron);
+    }
 }
 Genome::Genome()
 {
     this->Neurons = std::vector<Neuron>();
     this->Synapses = std::vector<Synapse>();
+    auto NewInputNeuron = Neuron(Neuron::NeuronTypes::INPUT);
+    this->AddNeuron(NewInputNeuron);
+    NewInputNeuron = Neuron(Neuron::NeuronTypes::OUTPUT);
+    this->AddNeuron(NewInputNeuron);
     this->Fitness = 0;
+    OutNeuronCount = 1;
 }
 void Genome::SortSynapsesByInnovation()
 {
@@ -47,6 +58,7 @@ std::unique_ptr<Genome> Genome::Mutation_Procreate(const Genome& Parent1,const G
     const Genome* fitter = &Parent2;
     const Genome* other  = &Parent1;
     auto Child = std::make_unique<Genome>();
+    Child->SetNeurons(fitter->GetNeurons());
     bool equalFitness = (Parent1.GetFitness() == Parent2.GetFitness());
     if (Parent1.GetFitness() >= Parent2.GetFitness())
     {
@@ -201,4 +213,54 @@ void Genome::Mutation_NewWire()
         AddSynapse(NewSynapse);
         return;
     }
+}
+std::vector<Synapse> Genome::ReturnInSynapsesOfNeuron(int Neuron_ID) const
+{
+    std::vector<Synapse> ReturnSynapses;
+    for (size_t i = 0; i < this->Synapses.size(); i++)
+    {
+        if (Synapses.at(i).GetOutNeuronID() == Neuron_ID)
+        {
+            ReturnSynapses.push_back(this->Synapses.at(i));
+        }
+    }
+    return ReturnSynapses;
+}
+
+std::vector<float> Genome:: ForwardPass(const std::vector<float>& inputs)
+{
+    size_t InputIdx = 0;
+    for (size_t i = 0; i < this->Neurons.size(); i++)
+    {
+        if (this->Neurons.at(i).GetNeuronType()== Neuron::NeuronTypes::INPUT)
+        {
+            this->Neurons.at(i).SetActivationValue(inputs.at(InputIdx++));
+        }
+    }
+    std::vector<float> ActivationVector;
+    float ThisActivationValue = 0;
+    Neuron* PreviousNeuron = nullptr;
+    for (size_t i = 0; i < this->Neurons.size(); i++)
+    {
+        Neuron& CurrentNeuron = this->Neurons.at(i);
+        if (CurrentNeuron.GetNeuronType() == Neuron::NeuronTypes::INPUT)
+            continue;
+        std::vector<Synapse> ConnectionSynapses = ReturnInSynapsesOfNeuron(CurrentNeuron.GetNeuronID());
+        for (size_t j = 0; j < ConnectionSynapses.size(); j++)
+        {
+            PreviousNeuron = FindNeuronByID(ConnectionSynapses.at(j).GetInNeuronID());
+            ThisActivationValue += ConnectionSynapses.at(j).GetWeight()*PreviousNeuron->GetActivationValue();
+        }
+        CurrentNeuron.SetActivationValue(std::tanhf(CurrentNeuron.GetBias() + ThisActivationValue));
+        ThisActivationValue = 0;
+    }
+    for (size_t i = 0; i < this->Neurons.size(); i++)
+    {
+        Neuron& CurrentNeuron = this->Neurons.at(i);
+        if (CurrentNeuron.GetNeuronType() == Neuron::NeuronTypes::OUTPUT)
+        {
+            ActivationVector.push_back(CurrentNeuron.GetActivationValue());
+        }
+    }
+    return ActivationVector;
 }
