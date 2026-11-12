@@ -4,8 +4,6 @@
 
 #ifndef FINALPROJECT_NEUROEVOLUTION_3D_SIMULATOR_SYNAPSE_H
 #define FINALPROJECT_NEUROEVOLUTION_3D_SIMULATOR_SYNAPSE_H
-#include "Neuron.h"
-
 
 class Synapse
 {
@@ -13,11 +11,20 @@ class Synapse
     static int GlobalInnovation;
     int SynapseInnovation;
     float Weight;
-    Neuron * In_Neuron;
-    Neuron * Out_Neuron;
+    int In_Neuron_ID;
+    int Out_Neuron_ID;
 
 public:
-    int GetSynapseInnovation();
+    Synapse( int In_Neuron_ID, int Out_Neuron_ID);
+    void Disable(){this->Enabled=false;}
+    void Enable(){this->Enabled=true;}
+    [[nodiscard]] bool IsEnabled() const{return this->Enabled;}
+    [[nodiscard]] int GetSynapseInnovation()const{return SynapseInnovation;}
+    [[nodiscard]] int GetInNeuronID() const { return In_Neuron_ID; }
+    [[nodiscard]] int GetOutNeuronID() const { return Out_Neuron_ID; }
+    [[nodiscard]] float GetWeight() const { return Weight; }
+    void SetWeight(const float NewWeight){this->Weight = NewWeight;}
+    Synapse& operator=(const Synapse &);
 };
 
 

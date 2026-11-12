@@ -8,36 +8,21 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Source files
 set(SOURCES
     main.cpp
-    NeuralNetwork.cpp
-        Synapse.cpp
-        Synapse.h
-        Neuron.cpp
-        Neuron.h
-        Mutate.cpp
-        Mutate.h
+    Neuron.cpp
+    Synapse.cpp
+    Genome.cpp
 )
 
 # Header files
 set(HEADERS
-    NeuralNetwork.h
-        Genome.cpp
-        Genome.h
-        Synapse.cpp
-        Synapse.h
-        Neuron.cpp
-        Neuron.h
-        Mutate.cpp
-        Mutate.h
+    Neuron.h
+    Synapse.h
+    Genome.h
+    Random.h
 )
 
 # Executable target
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS}
-        Synapse.cpp
-        Synapse.h
-        Neuron.cpp
-        Neuron.h
-        Mutate.cpp
-        Mutate.h)
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES

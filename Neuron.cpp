@@ -3,3 +3,20 @@
 //
 
 #include "Neuron.h"
+#include "Random.h"
+#include <random>
+
+int Neuron::NeuronIDCounter = 0;
+
+Neuron::Neuron(NeuronTypes Type)
+{
+    this->NeuronID = ++NeuronIDCounter;
+    this->ThisNeuronType = Type;
+    this->Bias = UniformFloat(RandomGen);
+}
+Neuron::Neuron()
+{
+    this->NeuronID = ++NeuronIDCounter;
+    this->ThisNeuronType = NeuronTypes::HIDDEN;
+    this->Bias = UniformFloat(RandomGen);
+}

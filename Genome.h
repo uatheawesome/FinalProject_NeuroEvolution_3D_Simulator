@@ -4,6 +4,7 @@
 
 #ifndef NEUROEVOLUTION3DSIMULATOR_GENOME_H
 #define NEUROEVOLUTION3DSIMULATOR_GENOME_H
+#include <memory>
 #include <vector>
 #include "Synapse.h"
 #include "Neuron.h"
@@ -12,13 +13,32 @@
 class Genome {
     std::vector<Neuron> Neurons;
     std::vector<Synapse> Synapses;
-    int HighestInnovation;
+    float Fitness;
     public:
-    Genome(int InputCount );
-    std::vector<Synapse> GetSynapses()const;
-    void AddSynapse(const Synapse &Synapse);
-    Genome* ProCreate(const Genome Parent2);
-};
+    Genome(int InputCount);
+    Genome();
+
+    void Mutation_WeightTuning();//Change weights slightly
+    void Mutation_NewWire();//pick two unconnected nodes adds synapse with random weight
+    void Mutation_SplittingTheWire(int InnovationID);//pics existing synapse Turns it to false, then adds hidden weight and adds synapses to bridge the gap
+   [[nodiscard]] std::unique_ptr<Genome>  Mutation_Procreate(const Genome& Parent1, const Genome& Parent2);
+
+    //add forward pass func
+
+    Neuron* FindNeuronByID(int id);
+    Neuron* ReturnRandNeuron();
+
+    void AddNeuron(const Neuron& Neuron){this->Neurons.push_back(Neuron);}
+    void AddSynapse(const Synapse &Synapse){this->Synapses.push_back(Synapse);}
+    void SortSynapsesByInnovation();
+    void SortSynapsesByInnovation(const Genome& Parent);
+    [[nodiscard]] std::vector<Synapse> GetSynapses()const{return this->Synapses;}
+    [[nodiscard]] std::vector<Neuron> GetNeurons()const{return this->Neurons;}
+    [[nodiscard]] float GetFitness()const{return this->Fitness;}
+    void SetFitness(float Fitness){this->Fitness = Fitness;}
+    void SetNeurons(const std::vector<Neuron>& NewNeurons) { this->Neurons = NewNeurons; }
+    void SetSynapses(const std::vector<Synapse>& NewSynapse) { this->Synapses = NewSynapse; }
+   };
 
 
 #endif //NEUROEVOLUTION3DSIMULATOR_GENOME_H
