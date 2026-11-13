@@ -19,6 +19,10 @@ set(HEADERS
     Synapse.h
     Genome.h
     Random.h
+        Species.cpp
+        Species.h
+        Population.cpp
+        Population.h
 )
 
 # Executable target
